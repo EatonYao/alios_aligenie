@@ -147,6 +147,7 @@ static int user_service_request_event_handler(const int devid, const char *servi
     return 0;
 }
 
+/*device received cloud data*/
 static int user_property_set_event_handler(const int devid, const char *request, const int request_len)
 {
     int res = 0;
@@ -384,6 +385,7 @@ static uint64_t user_update_sec(void)
     return (HAL_UptimeMs() - time_start_ms) / 1000;
 }
 
+/*not used*/
 void user_post_property(void)
 {
     static int example_index = 0;
@@ -428,6 +430,7 @@ void user_post_property(void)
     EXAMPLE_TRACE("Post Property Message ID: %d", res);
 }
 
+/*not used*/
 void user_post_event(void)
 {
     static int example_index = 0;
@@ -467,6 +470,7 @@ void user_post_event(void)
     EXAMPLE_TRACE("Post Event Message ID: %d", res);
 }
 
+/*not used*/
 void user_deviceinfo_update(void)
 {
     int res = 0;
@@ -478,6 +482,7 @@ void user_deviceinfo_update(void)
     EXAMPLE_TRACE("Device Info Update Message ID: %d", res);
 }
 
+/*not used*/
 void user_deviceinfo_delete(void)
 {
     int res = 0;
@@ -489,6 +494,7 @@ void user_deviceinfo_delete(void)
     EXAMPLE_TRACE("Device Info Delete Message ID: %d", res);
 }
 
+/*not used*/
 void user_post_raw_data(void)
 {
     int res = 0;
@@ -625,28 +631,28 @@ int linkkit_main(void *paras)
             break;
         }
         /* Post Proprety Example */
-        if (time_now_sec % 11 == 0 && user_master_dev_available()) {
-            user_post_property();
-        }
+        //if (time_now_sec % 11 == 0 && user_master_dev_available()) {
+        //    user_post_property();
+        //}
         /* Post Event Example */
-        if (time_now_sec % 17 == 0 && user_master_dev_available()) {
-            user_post_event();
-        }
+        //if (time_now_sec % 17 == 0 && user_master_dev_available()) {
+        //    user_post_event();
+        //}
 
         /* Device Info Update Example */
-        if (time_now_sec % 23 == 0 && user_master_dev_available()) {
-            user_deviceinfo_update();
-        }
+        //if (time_now_sec % 23 == 0 && user_master_dev_available()) {
+        //    user_deviceinfo_update();
+        //}
 
         /* Device Info Delete Example */
-        if (time_now_sec % 29 == 0 && user_master_dev_available()) {
-            user_deviceinfo_delete();
-        }
+        //if (time_now_sec % 29 == 0 && user_master_dev_available()) {
+        //    user_deviceinfo_delete();
+        //}
 
         /* Post Raw Example */
-        if (time_now_sec % 37 == 0 && user_master_dev_available()) {
-            user_post_raw_data();
-        }
+        //if (time_now_sec % 37 == 0 && user_master_dev_available()) {
+        //    user_post_raw_data();
+        //}
         time_prev_sec = time_now_sec;
     }
 
