@@ -1,0 +1,30 @@
+out/linkkitapp@sv6266_evb/modules/./platform/mcu/sv6266/sdk/components/bsp/soc/soc_init/soc_init.o: \
+ platform/mcu/sv6266/sdk/components/bsp/soc/soc_init/soc_init.c \
+ /home/icomm-iot/IOT/ali-smartliving-device-alios-things-rel_1.0.0/build/compiler/nds32le-elf-newlib-v3/lib/gcc/nds32le-elf/4.9.4/include/nds32_intrinsic.h \
+ platform/mcu/sv6266/sdk/components/bsp/soc/ssv6006/soc_types.h \
+ /home/icomm-iot/IOT/ali-smartliving-device-alios-things-rel_1.0.0/build/compiler/nds32le-elf-newlib-v3/nds32le-elf/include/stdlib.h \
+ /home/icomm-iot/IOT/ali-smartliving-device-alios-things-rel_1.0.0/build/compiler/nds32le-elf-newlib-v3/nds32le-elf/include/machine/ieeefp.h \
+ /home/icomm-iot/IOT/ali-smartliving-device-alios-things-rel_1.0.0/build/compiler/nds32le-elf-newlib-v3/nds32le-elf/include/_ansi.h \
+ /home/icomm-iot/IOT/ali-smartliving-device-alios-things-rel_1.0.0/build/compiler/nds32le-elf-newlib-v3/nds32le-elf/include/newlib.h \
+ /home/icomm-iot/IOT/ali-smartliving-device-alios-things-rel_1.0.0/build/compiler/nds32le-elf-newlib-v3/nds32le-elf/include/sys/config.h \
+ /home/icomm-iot/IOT/ali-smartliving-device-alios-things-rel_1.0.0/build/compiler/nds32le-elf-newlib-v3/nds32le-elf/include/sys/features.h \
+ /home/icomm-iot/IOT/ali-smartliving-device-alios-things-rel_1.0.0/build/compiler/nds32le-elf-newlib-v3/lib/gcc/nds32le-elf/4.9.4/include/stddef.h \
+ /home/icomm-iot/IOT/ali-smartliving-device-alios-things-rel_1.0.0/build/compiler/nds32le-elf-newlib-v3/nds32le-elf/include/sys/reent.h \
+ /home/icomm-iot/IOT/ali-smartliving-device-alios-things-rel_1.0.0/build/compiler/nds32le-elf-newlib-v3/nds32le-elf/include/_ansi.h \
+ /home/icomm-iot/IOT/ali-smartliving-device-alios-things-rel_1.0.0/build/compiler/nds32le-elf-newlib-v3/nds32le-elf/include/sys/_types.h \
+ /home/icomm-iot/IOT/ali-smartliving-device-alios-things-rel_1.0.0/build/compiler/nds32le-elf-newlib-v3/nds32le-elf/include/machine/_types.h \
+ /home/icomm-iot/IOT/ali-smartliving-device-alios-things-rel_1.0.0/build/compiler/nds32le-elf-newlib-v3/nds32le-elf/include/machine/_default_types.h \
+ /home/icomm-iot/IOT/ali-smartliving-device-alios-things-rel_1.0.0/build/compiler/nds32le-elf-newlib-v3/nds32le-elf/include/sys/lock.h \
+ /home/icomm-iot/IOT/ali-smartliving-device-alios-things-rel_1.0.0/build/compiler/nds32le-elf-newlib-v3/nds32le-elf/include/sys/cdefs.h \
+ /home/icomm-iot/IOT/ali-smartliving-device-alios-things-rel_1.0.0/build/compiler/nds32le-elf-newlib-v3/nds32le-elf/include/machine/stdlib.h \
+ /home/icomm-iot/IOT/ali-smartliving-device-alios-things-rel_1.0.0/build/compiler/nds32le-elf-newlib-v3/nds32le-elf/include/alloca.h \
+ /home/icomm-iot/IOT/ali-smartliving-device-alios-things-rel_1.0.0/build/compiler/nds32le-elf-newlib-v3/lib/gcc/nds32le-elf/4.9.4/include/stdint.h \
+ /home/icomm-iot/IOT/ali-smartliving-device-alios-things-rel_1.0.0/build/compiler/nds32le-elf-newlib-v3/nds32le-elf/include/stdint.h \
+ /home/icomm-iot/IOT/ali-smartliving-device-alios-things-rel_1.0.0/build/compiler/nds32le-elf-newlib-v3/nds32le-elf/include/sys/_intsup.h \
+ platform/mcu/sv6266/sdk/components/bsp/soc/ssv6006/soc_defs.h \
+ /home/icomm-iot/IOT/ali-smartliving-device-alios-things-rel_1.0.0/build/compiler/nds32le-elf-newlib-v3/nds32le-elf/include/inttypes.h \
+ platform/mcu/sv6266/sdk/components/bsp/soc/soc_init/../../../drv/gpio/hal_gpio.h \
+ platform/mcu/sv6266/sdk/components/sys/intc.h \
+ platform/mcu/sv6266/sdk/components/bsp/soc/soc_init/../../../drv/pinmux/hal_pinmux.h \
+ platform/mcu/sv6266/inc/custom/custom_io_hal.h \
+ platform/mcu/sv6266/sdk/components/bsp/soc/ssv6006/custom_io_chk.h

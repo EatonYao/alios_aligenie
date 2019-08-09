@@ -1,0 +1,106 @@
+{
+    "activation": [], 
+    "alicrypto": [], 
+    "auto_component": [], 
+    "base64": [], 
+    "board_sv6266_evb": [], 
+    "cfg": [], 
+    "chip_code": [], 
+    "cjson": [], 
+    "cli": [
+        "hal"
+    ], 
+    "digest_algorithm": [], 
+    "framework": [], 
+    "hal": [], 
+    "imbedtls": [
+        "alicrypto"
+    ], 
+    "iotx-hal": [
+        "digest_algorithm", 
+        "utility/log", 
+        "activation", 
+        "chip_code", 
+        "framework/netmgr", 
+        "security/imbedtls"
+    ], 
+    "kernel_init": [], 
+    "kv": [
+        "log"
+    ], 
+    "linkkit_sdk": [], 
+    "linkkitapp": [
+        "framework/protocol/linkkit/sdk", 
+        "framework/protocol/linkkit/hal", 
+        "framework/netmgr", 
+        "framework/common", 
+        "utility/cjson", 
+        "framework/uOTA", 
+        "cli"
+    ], 
+    "log": [], 
+    "net": [], 
+    "netmgr": [
+        "modules.fs.kv", 
+        "yloop", 
+        "kernel.hal"
+    ], 
+    "newlib_stub": [], 
+    "osal": [], 
+    "ota": [
+        "framework.uOTA.hal", 
+        "framework.uOTA.src.transport", 
+        "framework.uOTA.src.download", 
+        "framework.uOTA.src.verify"
+    ], 
+    "ota_download": [], 
+    "ota_hal": [
+        "base64", 
+        "imbedtls"
+    ], 
+    "ota_transport": [], 
+    "ota_verify": [], 
+    "rhino": [
+        "rhino"
+    ], 
+    "soc_init": [], 
+    "sv6266": [
+        "rhino", 
+        "hal", 
+        "netmgr", 
+        "framework.common", 
+        "cli", 
+        "cjson", 
+        "digest_algorithm", 
+        "alicrypto", 
+        "protocols.net", 
+        "libc", 
+        "platform/mcu/sv6266/sdk/components/bsp/soc/soc_init", 
+        "platform/mcu/sv6266/osal", 
+        "platform/mcu/sv6266/cfg", 
+        "rhino", 
+        "hal", 
+        "netmgr", 
+        "framework.common", 
+        "cli", 
+        "cjson", 
+        "digest_algorithm", 
+        "alicrypto", 
+        "protocols.net", 
+        "libc", 
+        "platform/mcu/sv6266/sdk/components/bsp/soc/soc_init", 
+        "platform/mcu/sv6266/osal", 
+        "platform/mcu/sv6266/cfg"
+    ], 
+    "vcall": [
+        "rhino"
+    ], 
+    "vfs": [
+        "kernel.vfs.device"
+    ], 
+    "vfs_device": [], 
+    "yloop": [
+        "log", 
+        "vfs"
+    ]
+}
