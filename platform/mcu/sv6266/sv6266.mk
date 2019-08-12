@@ -53,7 +53,7 @@ $(NAME)_PREBUILT_LIBRARY += lib/drv_uart.a
 $(NAME)_PREBUILT_LIBRARY += lib/lowpower.a
 $(NAME)_PREBUILT_LIBRARY += lib/pwm.a
 $(NAME)_PREBUILT_LIBRARY += lib/adc.a
-
+$(NAME)_PREBUILT_LIBRARY += lib/libhsuart.a
 
 GLOBAL_INCLUDES += port
 
@@ -64,6 +64,7 @@ GLOBAL_INCLUDES += $(SDKDIR)/components/osal
 GLOBAL_INCLUDES += $(SDKDIR)/components/inc
 GLOBAL_INCLUDES += $(SDKDIR)/components
 GLOBAL_INCLUDES += $(SDKDIR)/components/tools/atcmd
+GLOBAL_INCLUDES += $(SDKDIR)/components/drv/hsuart
 GLOBAL_INCLUDES += $(SDKDIR)/components/inc/crypto \
                    $(SDKDIR)/components/softmac \
                    $(SDKDIR)/components/iotapi \
@@ -181,6 +182,7 @@ GLOBAL_LDFLAGS += platform/mcu/sv6266/do_printf.o
 
 $(NAME)_INCLUDES := $(SDKDIR)/components/drv
 $(NAME)_SOURCES :=	aos.c \
+					user_atcmd.c \
 					libc_patch.c \
 					port/soc_impl.c \
 					port/port_tick.c \

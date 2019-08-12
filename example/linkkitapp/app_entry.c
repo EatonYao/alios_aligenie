@@ -110,6 +110,7 @@ static void linkkit_event_monitor(int event)
         case IOTX_AWSS_START: // AWSS start without enbale, just supports device discover
             // operate led to indicate user
             LOG("IOTX_AWSS_START");
+			do_awss_active();
             break;
         case IOTX_AWSS_ENABLE: // AWSS enable, AWSS doesn't parse awss packet until AWSS is enabled.
             LOG("IOTX_AWSS_ENABLE");
@@ -264,7 +265,7 @@ static void linkkit_reset(void *p)
 
 
 extern int  awss_report_reset();
-static void do_awss_reset()
+void do_awss_reset()
 {
 #ifdef WIFI_PROVISION_ENABLED
     aos_task_new("reset", (void (*)(void *))awss_report_reset, NULL, 6144);  // stack taken by iTLS is more than taken by TLS.

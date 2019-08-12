@@ -97,7 +97,7 @@ static void system_init(void)
     aos_kernel_init(&kinit);
 }
 
-static void do_awss_reset();
+void do_awss_reset();
 void isr_gpio_12()
 {
     drv_gpio_intc_clear(GPIO_12);
@@ -153,16 +153,7 @@ static void app_start(void)
         dump_rf_table();
     }
 
-    drv_gpio_set_dir(GPIO_12, GPIO_DIR_IN);
-    drv_gpio_set_dir(GPIO_11, GPIO_DIR_IN);
-    drv_gpio_set_pull(GPIO_12, GPIO_PULL_UP);
-    drv_gpio_set_pull(GPIO_11, GPIO_PULL_UP);
-
-    drv_gpio_intc_trigger_mode(GPIO_12, GPIO_INTC_FALLING_EDGE);
-    drv_gpio_intc_trigger_mode(GPIO_11, GPIO_INTC_FALLING_EDGE);
-
-    drv_gpio_register_isr(GPIO_12, isr_gpio_12);
-    drv_gpio_register_isr(GPIO_11, isr_gpio_11);
+    app_components_init();
     
     OS_TaskCreate(ssvradio_init_task, "ssvradio_init", 512, NULL, 1, NULL);
 #if defined(CONFIG_ENABLE_WDT)

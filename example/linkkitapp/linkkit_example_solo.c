@@ -10,6 +10,13 @@
 #include "app_entry.h"
 
 #define USE_CUSTOME_DOMAIN      (0)
+#define PRODUCT_LICENSE_LEN             PRODUCT_KEY_LEN +\
+                                        DEVICE_NAME_LEN +\
+                                        DEVICE_SECRET_LEN +\
+                                        PRODUCT_SECRET_LEN + 4
+#define KV_PRODUCT_LICENSE_KEY          "SOCLICENSE"
+
+
 
 // for demo only
 #define PRODUCT_KEY      "a1IztHG1pwa"
@@ -39,6 +46,11 @@ typedef struct {
 } user_example_ctx_t;
 
 static user_example_ctx_t g_user_example_ctx;
+
+static char license_product_key[PRODUCT_KEY_LEN+1] = {0};
+static char license_product_secret[PRODUCT_SECRET_LEN+1] = {0};
+static char license_device_name[DEVICE_NAME_LEN+1] = {0};
+static char license_device_secret[DEVICE_SECRET_LEN+1] = {0};
 
 static user_example_ctx_t *user_example_get_ctx(void)
 {
@@ -157,7 +169,7 @@ static int user_property_set_event_handler(const int devid, const char *request,
     res = IOT_Linkkit_Report(user_example_ctx->master_devid, ITM_MSG_POST_PROPERTY,
                              (unsigned char *)request, request_len);
     EXAMPLE_TRACE("Post Property Message ID: %d", res);
-
+	server_cmd_process(request);
     return 0;
 }
 
@@ -519,10 +531,57 @@ static int user_master_dev_available(void)
 
 void set_iotx_info()
 {
+#if 0
     HAL_SetProductKey(PRODUCT_KEY);
     HAL_SetProductSecret(PRODUCT_SECRET);
     HAL_SetDeviceName(DEVICE_NAME);
     HAL_SetDeviceSecret(DEVICE_SECRET);
+#else	
+    char license[PRODUCT_LICENSE_LEN] = {0};
+    int licenseLen = PRODUCT_LICENSE_LEN;
+    if ((aos_kv_get(KV_PRODUCT_LICENSE_KEY, (void *)license, &licenseLen)) == 0) {
+        int i = 0;
+        char *pHead = NULL;
+        EXAMPLE_TRACE("get device license:%s",license);
+        for(i = 0;i < PRODUCT_LICENSE_LEN;i++)
+       	{
+			if(license[i] == ',')
+			{
+				license[i] = 0;
+			}
+        }
+        pHead = license;
+        memset(license_product_key,0,PRODUCT_KEY_LEN+1);
+		strcpy(license_product_key,pHead);
+		//do not comments
+		HAL_SetProductKey(license_product_key);
+		printf("pk(%d):%s\r\n",strlen(license_product_key),license_product_key);
+		
+        pHead += strlen(pHead) + 1;
+        memset(license_product_secret,0,PRODUCT_SECRET_LEN+1);
+		strcpy(license_product_secret,pHead);
+		//do not comments
+		HAL_SetProductSecret(license_product_secret);
+		printf("ps(%d):%s\r\n",strlen(license_product_secret),license_product_secret);
+		
+        pHead += strlen(pHead) + 1;
+        memset(license_device_name,0,DEVICE_NAME_LEN+1);
+		strcpy(license_device_name,pHead);
+		//do not comments
+		HAL_SetDeviceName(license_device_name);
+		printf("dn(%d):%s\r\n",strlen(license_device_name),license_device_name);
+		
+        pHead += strlen(pHead) + 1;
+        memset(license_device_secret,0,DEVICE_SECRET_LEN+1);
+		strcpy(license_device_secret,pHead);
+		//do not comments
+		HAL_SetDeviceSecret(license_device_secret);
+		printf("ds(%d):%s\r\n",strlen(license_device_secret),license_device_secret);
+    } 
+	else {
+        EXAMPLE_TRACE("device license is NULL!");
+    }
+#endif
 }
 
 static int max_running_seconds = 0;
@@ -574,10 +633,11 @@ int linkkit_main(void *paras)
     IOT_RegisterCallback(ITE_COTA, user_cota_event_handler);
 
     memset(&master_meta_info, 0, sizeof(iotx_linkkit_dev_meta_info_t));
-    memcpy(master_meta_info.product_key, PRODUCT_KEY, strlen(PRODUCT_KEY));
-    memcpy(master_meta_info.product_secret, PRODUCT_SECRET, strlen(PRODUCT_SECRET));
-    memcpy(master_meta_info.device_name, DEVICE_NAME, strlen(DEVICE_NAME));
-    memcpy(master_meta_info.device_secret, DEVICE_SECRET, strlen(DEVICE_SECRET));
+    memcpy(master_meta_info.product_key, license_product_key, strlen(license_product_key));
+    memcpy(master_meta_info.product_secret, license_product_secret, strlen(license_product_secret));
+    memcpy(master_meta_info.device_name, license_device_name, strlen(license_device_name));
+    memcpy(master_meta_info.device_secret, license_device_secret, strlen(license_device_secret));
+
 
     /* Choose Login Server, domain should be configured before IOT_Linkkit_Open() */
 #if USE_CUSTOME_DOMAIN
@@ -630,6 +690,9 @@ int linkkit_main(void *paras)
             EXAMPLE_TRACE("Example Run for Over %d Seconds, Break Loop!\n", max_running_seconds);
             break;
         }
+
+
+		
         /* Post Proprety Example */
         //if (time_now_sec % 11 == 0 && user_master_dev_available()) {
         //    user_post_property();
