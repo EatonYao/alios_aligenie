@@ -4,7 +4,7 @@
 
 
 /***********************************************************************************/
-#define ANION								"anionOnOff"			//负离子
+//#define ANION								"anionOnOff"			//负离子
 #define ULTRAVIOLET							"ultravioletOnOff"		//消毒
 #define AIR_DRYING							"airDryOnOff"			//风干
 #define DRYING								"drying"				//烘干

@@ -190,7 +190,8 @@ void uart_cmd_process(char* str,uint16_t strLen)
 {
 	uint16_t app_event_status = 0;
 	
-	if ((ackTimeOut) && (OS_TimerIsActive(ackTimeOut))) {
+	if ((ackTimeOut) && (OS_TimerIsActive
+(ackTimeOut))) {
 		OS_TimerStop(ackTimeOut);
 	}
 	if (*(str) < 0x10) {
@@ -271,9 +272,7 @@ void server_cmd_process(char* str)
 	}
 	deviceProperty.posationStatus = 0xFF;
 	
-	if (strstr(str,ANION) != NULL) {
-		deviceStatus.anionOnOff = value;
-	} else if (strstr(str,ULTRAVIOLET) != NULL) {
+	if (strstr(str,ULTRAVIOLET) != NULL) {
 		deviceProperty.functionStatus &= 0x7F;
 		deviceProperty.functionStatus |= value<<7;
 		deviceStatus.ultravioletOnOff = value;
@@ -315,7 +314,8 @@ void server_cmd_process(char* str)
 	
 	cmdPacket = app_cmd_set_packet(deviceProperty);
 	app_uart_send((char*)cmdPacket,8);
-	if ((ackTimeOut) && (OS_TimerIsActive(ackTimeOut) != 1)) {
+	if ((ackTimeOut) && (OS_TimerIsActive
+(ackTimeOut) != 1)) {
 		OS_TimerSet(ackTimeOut, MCU_ACK_TIMEOUT,0,NULL);
         OS_TimerStart(ackTimeOut);
 	} else {
@@ -343,7 +343,7 @@ uint8_t* app_cmd_set_packet(deviceProperty_t deviceParams)
 
 void user_post_msg(void)
 {
-    char json_payload[] = "{\"%s\":%d,\"%s\":%d,\"%s\":%d,\"%s\":%d,\"%s\":%d,\"%s\":%d}";
+    char json_payload[] = "{\"%s\":%d,\"%s\":%d,\"%s\":%d,\"%s\":%d,\"%s\":%d}";
 	char property_payload[USER_PROPERTY_PAYLOAD_MAX];
 	char motor_ctrl = 0;
 
@@ -360,7 +360,7 @@ void user_post_msg(void)
 		motor_ctrl = 0;
 	}
 	memset(property_payload,0,USER_PROPERTY_PAYLOAD_MAX);
-	snprintf(property_payload,USER_PROPERTY_PAYLOAD_MAX,json_payload,ANION,deviceStatus.anionOnOff,ULTRAVIOLET,deviceStatus.ultravioletOnOff,
+	snprintf(property_payload,USER_PROPERTY_PAYLOAD_MAX,json_payload,ULTRAVIOLET,deviceStatus.ultravioletOnOff,
 		     AIR_DRYING,deviceStatus.airDryOnOff,DRYING,deviceStatus.drying,ILLUMINATION,deviceStatus.illumination,UP_DOWN,motor_ctrl);
 	user_post_property(property_payload);
 
