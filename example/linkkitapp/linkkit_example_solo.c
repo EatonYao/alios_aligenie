@@ -16,8 +16,6 @@
                                         PRODUCT_SECRET_LEN + 4
 #define KV_PRODUCT_LICENSE_KEY          "SOCLICENSE"
 
-
-
 // for demo only
 #define PRODUCT_KEY      "a1IztHG1pwa"
 #define PRODUCT_SECRET   "SX1TwHLWfocIjNbr"
