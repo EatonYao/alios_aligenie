@@ -16,8 +16,6 @@
                                         PRODUCT_SECRET_LEN + 4
 #define KV_PRODUCT_LICENSE_KEY          "SOCLICENSE"
 
-
-
 // for demo only
 #define PRODUCT_KEY      "a1IztHG1pwa"
 #define PRODUCT_SECRET   "SX1TwHLWfocIjNbr"
@@ -397,49 +395,16 @@ static uint64_t user_update_sec(void)
     return (HAL_UptimeMs() - time_start_ms) / 1000;
 }
 
-/*not used*/
-void user_post_property(void)
+
+void user_post_property(char *user_property_data)
 {
-    static int example_index = 0;
     int res = 0;
     user_example_ctx_t *user_example_ctx = user_example_get_ctx();
-    char *property_payload = "NULL";
-
-    if (example_index == 0) {
-        /* Normal Example */
-        property_payload = "{\"LightSwitch\":1}";
-        /* example_index++; */
-    } else if (example_index == 1) {
-        /* Wrong Property ID */
-        property_payload = "{\"LightSwitchxxxx\":1}";
-        example_index++;
-    } else if (example_index == 2) {
-        /* Wrong Value Format */
-        property_payload = "{\"LightSwitch\":\"test\"}";
-        example_index++;
-    } else if (example_index == 3) {
-        /* Wrong Value Range */
-        property_payload = "{\"LightSwitch\":10}";
-        example_index++;
-    } else if (example_index == 4) {
-        /* Missing Property Item */
-        property_payload = "{\"RGBColor\":{\"Red\":45,\"Green\":30}}";
-        example_index++;
-    } else if (example_index == 5) {
-        /* Wrong Params Format */
-        property_payload = "\"hello world\"";
-        example_index++;
-    } else if (example_index == 6) {
-        /* Wrong Json Format */
-        property_payload = "hello world";
-        example_index = 0;
-    }
-
 
     res = IOT_Linkkit_Report(user_example_ctx->master_devid, ITM_MSG_POST_PROPERTY,
-                             (unsigned char *)property_payload, strlen(property_payload));
+                             (unsigned char *)user_property_data, strlen(user_property_data));
 
-    EXAMPLE_TRACE("Post Property Message ID: %d", res);
+    EXAMPLE_TRACE("Post Property Message ID: %d,data:%s", res,user_property_data);
 }
 
 /*not used*/
@@ -638,6 +603,7 @@ int linkkit_main(void *paras)
     memcpy(master_meta_info.device_name, license_device_name, strlen(license_device_name));
     memcpy(master_meta_info.device_secret, license_device_secret, strlen(license_device_secret));
 
+	app_uart_send("device ready\r\n",strlen("device ready\r\n"));
 
     /* Choose Login Server, domain should be configured before IOT_Linkkit_Open() */
 #if USE_CUSTOME_DOMAIN

@@ -4,6 +4,15 @@
 
 
 /***********************************************************************************/
+//#define ANION								"anionOnOff"			//负离子
+#define ULTRAVIOLET							"ultravioletOnOff"		//消毒
+#define AIR_DRYING							"airDryOnOff"			//风干
+#define DRYING								"drying"				//烘干
+#define ILLUMINATION						"illumination"			//照明
+#define UP_DOWN								"motorControl"			//上升或下降
+
+
+
 #define CMD_SET_END_CODE					0x69
 #define CMD_SET_RESERVE_CODE				0xB4
 #define CMD_SET_USER_CODE					0x10

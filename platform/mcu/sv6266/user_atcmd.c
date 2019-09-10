@@ -13,12 +13,7 @@
 
 
 /***********************************************************************************/
-#define ANION								"anionOnOff"			//负离子
-#define ULTRAVIOLET							"ultravioletOnOff"		//消毒
-#define AIR_DRYING							"airDryOnOff"			//风干
-#define DRYING								"drying"				//烘干
-#define ILLUMINATION						"illumination"			//照明
-#define UP_DOWN								"motorControl"			//上升或下降
+
 
 #define APP_UART_BAUD						9600
 
@@ -46,6 +41,8 @@
 											APP_EVENT_ILLUMINATION |\
 											APP_EVENT_UP_DOWN |\
 											APP_EVENT_ANION
+											
+#define USER_PROPERTY_PAYLOAD_MAX                256
 
 /***********************************************************************************/
 appUartRx_t appUartRx;
@@ -69,6 +66,7 @@ uint8_t data_is_cmd(char* str,uint16_t strLen);
 void uart_cmd_process(char* str,uint16_t strLen);
 uint8_t* app_cmd_set_packet(deviceProperty_t deviceParams);
 void update_dev_local_status(void);
+void user_post_msg(void);
 
 
 
@@ -79,7 +77,6 @@ void app_components_init(void)
 {
 	app_uart_init(APP_UART_BAUD);
 	app_timer_init();
-	OS_TaskCreate(app_post_msg_task, "app post msg task", 1024, NULL, 2, NULL);
 }
 
 void app_timer_init(void)
@@ -128,12 +125,13 @@ void app_uart_isr(void)
 void app_uart_rx_task(void *param)
 {
    	OS_STATUS ret;
-    app_uart_send("device ready\r\n",strlen("device ready\r\n"));
+    //app_uart_send("device ready\r\n",strlen("device ready\r\n"));
 	
    	while (1) {
       	ret = OS_SemWait(appUartRxSem, APP_UART_RX_TIMEOUT/OS_TICK_RATE_MS);
       	if (ret == OS_TIMEOUT) {
          	if (appUartRx.recvLen > 0) {
+				printf("rx task:recv data\r\n");
 				if (data_is_cmd(appUartRx.buf,appUartRx.recvLen)) {
 					uart_cmd_process(appUartRx.buf,appUartRx.recvLen);
 				} else {
@@ -190,99 +188,75 @@ void update_dev_local_status(void)
 void do_awss_reset();
 void uart_cmd_process(char* str,uint16_t strLen)
 {
-	OsMsgQEntry msg_evt;
-	if ((ackTimeOut) && (OS_TimerIsActive(ackTimeOut))) {
+	uint16_t app_event_status = 0;
+	
+	if ((ackTimeOut) && (OS_TimerIsActive
+(ackTimeOut))) {
 		OS_TimerStop(ackTimeOut);
 	}
 	if (*(str) < 0x10) {
 		app_uart_send("client code(heade) error!\n",strlen("client code(heade) error!\n"));
 	} else {
+		//printf("process data\r\n");
 		if (*(str+2) & 0x80) {
-			if (deviceStatus.illumination != STATUS_ON) {
 				deviceStatus.illumination = STATUS_ON;
-				msg_evt.MsgCmd = APP_EVENT_ILLUMINATION;
-				OS_MsgQEnqueue(cmdMsgQ,&msg_evt);
-			}
+				app_event_status |= APP_EVENT_ILLUMINATION;
+				printf("APP_EVENT_ILLUMINATION\r\n");
 		} else {
-			if (deviceStatus.illumination != STATUS_OFF) {
 				deviceStatus.illumination = STATUS_OFF;
-				//xEventGroupSetBits(cmdEventGroup,APP_EVENT_ILLUMINATION);
-				msg_evt.MsgCmd = APP_EVENT_ILLUMINATION;
-				OS_MsgQEnqueue(cmdMsgQ,&msg_evt);
-			}
+				app_event_status |= APP_EVENT_ILLUMINATION;
+				printf("APP_EVENT_ILLUMINATION\r\n");
 		}
 		if (*(str+4) & 0x80) {
-			if (deviceStatus.ultravioletOnOff != STATUS_ON) {
 				deviceStatus.ultravioletOnOff = STATUS_ON;
-				//xEventGroupSetBits(cmdEventGroup,APP_EVENT_ULTRAVIOLET);
-				msg_evt.MsgCmd = APP_EVENT_ULTRAVIOLET;
-				OS_MsgQEnqueue(cmdMsgQ,&msg_evt);
-			}
+				app_event_status |= APP_EVENT_ULTRAVIOLET;
+				printf("APP_EVENT_ULTRAVIOLET\r\n");
 		} else {
-			if (deviceStatus.ultravioletOnOff != STATUS_OFF) {
 				deviceStatus.ultravioletOnOff = STATUS_OFF;
-				//xEventGroupSetBits(cmdEventGroup,APP_EVENT_ULTRAVIOLET);
-				msg_evt.MsgCmd = APP_EVENT_ULTRAVIOLET;
-				OS_MsgQEnqueue(cmdMsgQ,&msg_evt);
-			}
+				app_event_status |= APP_EVENT_ULTRAVIOLET;
+				printf("APP_EVENT_ULTRAVIOLET\r\n");
 		}
 		if (*(str+4) & 0x40) {
-			if (deviceStatus.airDryOnOff != STATUS_ON) {
 				deviceStatus.airDryOnOff = STATUS_ON;
-				//xEventGroupSetBits(cmdEventGroup,APP_EVENT_AIR_DRYING);
-				msg_evt.MsgCmd = APP_EVENT_AIR_DRYING;
-				OS_MsgQEnqueue(cmdMsgQ,&msg_evt);
-			}
+				app_event_status |= APP_EVENT_AIR_DRYING;
+				printf("APP_EVENT_AIR_DRYING\r\n");
 		} else {
-			if (deviceStatus.airDryOnOff != STATUS_OFF) {
 				deviceStatus.airDryOnOff = STATUS_OFF;
-				//xEventGroupSetBits(cmdEventGroup,APP_EVENT_AIR_DRYING);
-				msg_evt.MsgCmd = APP_EVENT_AIR_DRYING;
-				OS_MsgQEnqueue(cmdMsgQ,&msg_evt);
-			}
+				app_event_status |= APP_EVENT_AIR_DRYING;
+				printf("APP_EVENT_AIR_DRYING\r\n");
 		}
 		if (*(str+4) & 0x20) {
-			if (deviceStatus.drying != STATUS_ON) {
 				deviceStatus.drying = STATUS_ON;
-				//xEventGroupSetBits(cmdEventGroup,APP_EVENT_DRYING);
-				msg_evt.MsgCmd = APP_EVENT_DRYING;
-				OS_MsgQEnqueue(cmdMsgQ,&msg_evt);
-			}
+				app_event_status |= APP_EVENT_DRYING;
+				printf("APP_EVENT_DRYING\r\n");
 		} else {
-			if (deviceStatus.drying != STATUS_OFF) {
 				deviceStatus.drying = STATUS_OFF;
-				//xEventGroupSetBits(cmdEventGroup,APP_EVENT_DRYING);
-				msg_evt.MsgCmd = APP_EVENT_DRYING;
-				OS_MsgQEnqueue(cmdMsgQ,&msg_evt);
-			}
+				app_event_status |= APP_EVENT_DRYING;
+				printf("APP_EVENT_DRYING\r\n");
 		}
 		if ((*(str+4) & 0x01) == 0x01) {
-			if (deviceStatus.motorControl != CLOTHES_POLE_UP) {
 				deviceStatus.motorControl = CLOTHES_POLE_UP;
-				//xEventGroupSetBits(cmdEventGroup,APP_EVENT_UP_DOWN);
-				msg_evt.MsgCmd = APP_EVENT_UP_DOWN;
-				OS_MsgQEnqueue(cmdMsgQ,&msg_evt);
-			}
-		} else if ((*(str+4) & 0x02) == 0x10) {
-			if (deviceStatus.motorControl != CLOTHES_POLE_DOWN) {
+				app_event_status |= APP_EVENT_UP_DOWN;
+				printf("APP_EVENT_UP\r\n");
+		} else if ((*(str+4) & 0x02) == 0x02) {
 				deviceStatus.motorControl = CLOTHES_POLE_DOWN;
-				//xEventGroupSetBits(cmdEventGroup,APP_EVENT_UP_DOWN);
-				msg_evt.MsgCmd = APP_EVENT_UP_DOWN;
-				OS_MsgQEnqueue(cmdMsgQ,&msg_evt);
-			}
-		} else if ((*(str+4) | 0xFC) == 0xFC) {
-			if (deviceStatus.motorControl != CLOTHES_POLE_STOP) {
+				app_event_status |= APP_EVENT_UP_DOWN;
+				printf("APP_EVENT_DOWN\r\n");
+		} else {
 				deviceStatus.motorControl = CLOTHES_POLE_STOP;
-				//xEventGroupSetBits(cmdEventGroup,APP_EVENT_UP_DOWN);
-				msg_evt.MsgCmd = APP_EVENT_UP_DOWN;
-				OS_MsgQEnqueue(cmdMsgQ,&msg_evt);
-			}
+				app_event_status |= APP_EVENT_UP_DOWN;
+				printf("APP_EVENT_STOP\r\n");
 		}
 		if ((*(str+6) & 0x08) == 0x08) {
-			//aick_osal_factory_reset();
 			do_awss_reset();
 		}
 		update_dev_local_status();
+	}
+	printf("app event status:%d\r\n",app_event_status);
+	if(app_event_status)
+	{
+		user_post_msg();
+		app_event_status = 0;
 	}
 }
 
@@ -298,9 +272,7 @@ void server_cmd_process(char* str)
 	}
 	deviceProperty.posationStatus = 0xFF;
 	
-	if (strstr(str,ANION) != NULL) {
-		deviceStatus.anionOnOff = value;
-	} else if (strstr(str,ULTRAVIOLET) != NULL) {
+	if (strstr(str,ULTRAVIOLET) != NULL) {
 		deviceProperty.functionStatus &= 0x7F;
 		deviceProperty.functionStatus |= value<<7;
 		deviceStatus.ultravioletOnOff = value;
@@ -342,7 +314,8 @@ void server_cmd_process(char* str)
 	
 	cmdPacket = app_cmd_set_packet(deviceProperty);
 	app_uart_send((char*)cmdPacket,8);
-	if ((ackTimeOut) && (OS_TimerIsActive(ackTimeOut) != 1)) {
+	if ((ackTimeOut) && (OS_TimerIsActive
+(ackTimeOut) != 1)) {
 		OS_TimerSet(ackTimeOut, MCU_ACK_TIMEOUT,0,NULL);
         OS_TimerStart(ackTimeOut);
 	} else {
@@ -366,106 +339,32 @@ uint8_t* app_cmd_set_packet(deviceProperty_t deviceParams)
 	return cmdPacket;
 }
 
-void app_post_msg_task(void *arg)
+
+
+void user_post_msg(void)
 {
-	OsMsgQEntry appMsgEvt;
-	
-	if (OS_MsgQCreate(&cmdMsgQ,10) != OS_SUCCESS) {
-		printf("cmd msg Q create failure!\n");
-		OS_TaskDelete(NULL);
+    char json_payload[] = "{\"%s\":%d,\"%s\":%d,\"%s\":%d,\"%s\":%d,\"%s\":%d}";
+	char property_payload[USER_PROPERTY_PAYLOAD_MAX];
+	char motor_ctrl = 0;
+
+	if (deviceStatus.motorControl == CLOTHES_POLE_UP) 
+	{
+		motor_ctrl = 1;
+	} 
+	else if (deviceStatus.motorControl == CLOTHES_POLE_DOWN) 
+	{
+		motor_ctrl = 2;
+	} 
+	else if (deviceStatus.motorControl == CLOTHES_POLE_STOP) 
+	{
+		motor_ctrl = 0;
 	}
-	
-	while(1) {
-		if(OS_MsgQDequeue(cmdMsgQ,&appMsgEvt,portMAX_DELAY) == OS_SUCCESS);
-		{
-			switch(appMsgEvt.MsgCmd)
-			{
-				case APP_EVENT_ULTRAVIOLET:
-					if (deviceStatus.ultravioletOnOff == STATUS_ON) 
-					{
-						//user_pub_msg(ULTRAVIOLET,1);
-					} 
-					else 
-					{
-						//user_pub_msg(ULTRAVIOLET,0);
-			        }
-					printf("cmdEvent ULTRAVIOLET!\n");
-				break;
+	memset(property_payload,0,USER_PROPERTY_PAYLOAD_MAX);
+	snprintf(property_payload,USER_PROPERTY_PAYLOAD_MAX,json_payload,ULTRAVIOLET,deviceStatus.ultravioletOnOff,
+		     AIR_DRYING,deviceStatus.airDryOnOff,DRYING,deviceStatus.drying,ILLUMINATION,deviceStatus.illumination,UP_DOWN,motor_ctrl);
+	user_post_property(property_payload);
 
-				case APP_EVENT_AIR_DRYING:
-					if (deviceStatus.airDryOnOff == STATUS_ON) 
-					{
-						//user_pub_msg(AIR_DRYING,1);
-					} 
-					else 
-					{
-						//user_pub_msg(AIR_DRYING,0);
-					}
-					printf("cmdEvent AIR_DRYING!\n");
-				break;
-
-				case APP_EVENT_ANION:
-					if (deviceStatus.anionOnOff == STATUS_ON) 
-					{
-						//user_pub_msg(ANION,1);
-					} 
-					else 
-					{
-						//user_pub_msg(ANION,0);
-					}
-					printf("cmdEvent ANION!\n");
-				break;
-
-				case APP_EVENT_DRYING:
-					if (deviceStatus.drying == STATUS_ON) 
-					{
-						//user_pub_msg(DRYING,1);
-					} 
-					else 
-					{
-						//user_pub_msg(DRYING,0);
-					}
-					printf("cmdEvent DRYING!\n");
-				break;
-
-				case APP_EVENT_ILLUMINATION:
-					if (deviceStatus.illumination == STATUS_ON) 
-					{
-						//user_pub_msg(ILLUMINATION,1);
-					} 
-					else 
-					{
-						//user_pub_msg(ILLUMINATION,0);
-					}
-					printf("cmdEvent ILLUMINATION!\n");
-				break;
-
-				case APP_EVENT_UP_DOWN:
-					if (deviceStatus.motorControl == CLOTHES_POLE_UP) 
-					{
-						//user_pub_msg(UP_DOWN,1);
-					} 
-					else if (deviceStatus.motorControl == CLOTHES_POLE_DOWN) 
-					{
-						//user_pub_msg(UP_DOWN,2);
-					} 
-					else if (deviceStatus.motorControl == CLOTHES_POLE_STOP) 
-					{
-						//user_pub_msg(UP_DOWN,0);
-					}
-					printf("cmdEvent UP_DOWN!\n");
-				break;
-
-				default:
-				break;
-			}
-		}
-	}
-	OS_TaskDelete(NULL);
 }
-
-
-
 
 
 
