@@ -199,53 +199,75 @@ void uart_cmd_process(char* str,uint16_t strLen)
 	} else {
 		//printf("process data\r\n");
 		if (*(str+2) & 0x80) {
+			if(deviceStatus.illumination != STATUS_ON) {
 				deviceStatus.illumination = STATUS_ON;
 				app_event_status |= APP_EVENT_ILLUMINATION;
 				printf("APP_EVENT_ILLUMINATION\r\n");
+			}
 		} else {
+			if(deviceStatus.illumination != STATUS_OFF) {
 				deviceStatus.illumination = STATUS_OFF;
 				app_event_status |= APP_EVENT_ILLUMINATION;
 				printf("APP_EVENT_ILLUMINATION\r\n");
+			}
 		}
 		if (*(str+4) & 0x80) {
+			if(deviceStatus.ultravioletOnOff != STATUS_ON) {
 				deviceStatus.ultravioletOnOff = STATUS_ON;
 				app_event_status |= APP_EVENT_ULTRAVIOLET;
 				printf("APP_EVENT_ULTRAVIOLET\r\n");
+			}
 		} else {
+			if(deviceStatus.ultravioletOnOff != STATUS_OFF) {
 				deviceStatus.ultravioletOnOff = STATUS_OFF;
 				app_event_status |= APP_EVENT_ULTRAVIOLET;
 				printf("APP_EVENT_ULTRAVIOLET\r\n");
+			}
 		}
 		if (*(str+4) & 0x40) {
+			if(deviceStatus.airDryOnOff != STATUS_ON) {
 				deviceStatus.airDryOnOff = STATUS_ON;
 				app_event_status |= APP_EVENT_AIR_DRYING;
 				printf("APP_EVENT_AIR_DRYING\r\n");
+			}
 		} else {
+			if(deviceStatus.airDryOnOff != STATUS_OFF) {
 				deviceStatus.airDryOnOff = STATUS_OFF;
 				app_event_status |= APP_EVENT_AIR_DRYING;
 				printf("APP_EVENT_AIR_DRYING\r\n");
+			}
 		}
 		if (*(str+4) & 0x20) {
+			if(deviceStatus.drying != STATUS_ON) {
 				deviceStatus.drying = STATUS_ON;
 				app_event_status |= APP_EVENT_DRYING;
 				printf("APP_EVENT_DRYING\r\n");
+			}
 		} else {
+			if(deviceStatus.drying != STATUS_OFF) {
 				deviceStatus.drying = STATUS_OFF;
 				app_event_status |= APP_EVENT_DRYING;
 				printf("APP_EVENT_DRYING\r\n");
+			}
 		}
 		if ((*(str+4) & 0x01) == 0x01) {
+			if(deviceStatus.motorControl != CLOTHES_POLE_UP) {
 				deviceStatus.motorControl = CLOTHES_POLE_UP;
 				app_event_status |= APP_EVENT_UP_DOWN;
 				printf("APP_EVENT_UP\r\n");
+			}
 		} else if ((*(str+4) & 0x02) == 0x02) {
+			if(deviceStatus.motorControl != CLOTHES_POLE_DOWN) {
 				deviceStatus.motorControl = CLOTHES_POLE_DOWN;
 				app_event_status |= APP_EVENT_UP_DOWN;
 				printf("APP_EVENT_DOWN\r\n");
+			}
 		} else {
+			if(deviceStatus.motorControl != CLOTHES_POLE_STOP) {
 				deviceStatus.motorControl = CLOTHES_POLE_STOP;
 				app_event_status |= APP_EVENT_UP_DOWN;
 				printf("APP_EVENT_STOP\r\n");
+			}
 		}
 		if ((*(str+6) & 0x08) == 0x08) {
 			do_awss_reset();
